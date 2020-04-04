@@ -12,6 +12,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -24,7 +25,6 @@ public class MainActivity extends AppCompatActivity
     private static final String API_KEY = "29fe7b237d05764a1bd1308c911e8f74";
     private static List<WeatherObservation> database = new CopyOnWriteArrayList<>();
     private String stringURL;
-    private String city;
 
     // UI fields
     private Button button_update;
@@ -36,9 +36,6 @@ public class MainActivity extends AppCompatActivity
     private TextView humidity_TextView;
     private TextView minMax_TextView;
 
-    // OnCompletedNetworkingListener declaration
-    private OnCompletedNetworkingListener mListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -46,24 +43,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // initialize layout
-        button_update = findViewById(R.id.button_update);
-        city_TIL = findViewById(R.id.city_InputLayout);
-        temperature_TextView = findViewById(R.id.textView_temperature);
-        city_TextView = findViewById(R.id.city_TextView);
-        description_TextView = findViewById(R.id.textView_description);
-        windSpeed_TextView = findViewById(R.id.textView_windSpeed);
-        humidity_TextView = findViewById(R.id.textView_humidity);
-        minMax_TextView = findViewById(R.id.textView_minMax);
-
-        // initialize a listener
-        mListener = new OnCompletedNetworkingListener()
-        {
-            @Override
-            public void handleEndOfNetworking()
-            {
-                updateUI();
-            }
-        };
+        initializeLayoutElements();
 
         // button clicks
         button_update.setOnClickListener(new View.OnClickListener()
@@ -71,7 +51,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                // generate stringURL for the desired city (includes validation of city name)
                 getDataInNewThread();
             }
         });
@@ -80,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     public void getDataInNewThread()
     {
         // generate stringURL for the desired city (includes validation of city name)
-        city = city_TIL.getEditText().getText().toString().trim();
+        String city = city_TIL.getEditText().getText().toString().trim();
         if (city.isEmpty())
         {
             city_TIL.setError("Field can't be empty");
@@ -93,47 +72,43 @@ public class MainActivity extends AppCompatActivity
         stringURL = String.format("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s", city, API_KEY);
 
         // thread code
-        ExecutorService service = null;
-
-        try
+        new Thread(() ->
         {
-            service = Executors.newSingleThreadExecutor();
-            service.execute(new Runnable()
+            JSONObject jObj = NetFun.requestInfoFromNetwork(stringURL);
+            WeatherObservation wObs = NetFun.makeJsonToObservation(jObj);
+            if (wObs != null)
             {
-                @Override
-                public void run()
-                {
-                    JSONObject jObj = NetFun.requestInfoFromNetwork(stringURL);
-                    WeatherObservation wObs = NetFun.makeJsonToObservation(jObj);
-                    if (wObs != null)
-                    {
-                        database.add(wObs);
-                        mListener.handleEndOfNetworking();
-                    }
-                }
-            });
-        }
-        finally
-        {
-            if (service != null)
-            {
-                service.shutdown();
+                database.add(wObs);
+                // update UI on the main thread
+                runOnUiThread(() -> updateUI());
             }
-        }
+        }).start();
     }
 
-    public void updateUI()
+    private void updateUI()
     {
         if (database.size() > 0)
         {
             WeatherObservation currentWO = database.get(database.size()-1);
 
-            city_TextView.setText(currentWO.getCity_name() + " (" + currentWO.getCountry() + ")");
+            city_TextView.setText(String.format("%s (%s)", currentWO.getCity_name(), currentWO.getCountry()));
             temperature_TextView.setText(String.format(Locale.UK, "%.0f°C", currentWO.getTemp()));
             description_TextView.setText(currentWO.getDescription());
             windSpeed_TextView.setText(String.valueOf(currentWO.getWind_speed()));
             humidity_TextView.setText(String.format(Locale.UK, "%.0f%%", currentWO.getHumidity()));
             minMax_TextView.setText(String.format(Locale.UK, "%.0f  |  %.0f°C", currentWO.getTemp_min(), currentWO.getTemp_max()));
         }
+    }
+
+    private void initializeLayoutElements()
+    {
+        button_update = findViewById(R.id.button_update);
+        city_TIL = findViewById(R.id.city_InputLayout);
+        temperature_TextView = findViewById(R.id.textView_temperature);
+        city_TextView = findViewById(R.id.city_TextView);
+        description_TextView = findViewById(R.id.textView_description);
+        windSpeed_TextView = findViewById(R.id.textView_windSpeed);
+        humidity_TextView = findViewById(R.id.textView_humidity);
+        minMax_TextView = findViewById(R.id.textView_minMax);
     }
 }
