@@ -36,16 +36,9 @@ public class MainActivity extends AppCompatActivity
     private TextView humidity_TextView;
     private TextView minMax_TextView;
 
-    /*
-     * ASYNCHRONOUS CALLBACK NETWORKING ------------------------------------------------------------
-     */
+    // OnCompletedNetworkingListener declaration
     private OnCompletedNetworkingListener mListener;
-    private void registerOnCompletedNetworkingListener(OnCompletedNetworkingListener listener)
-    {
-        this.mListener = listener;
-    }
 
-    // ---------------------------------------------------------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -63,7 +56,14 @@ public class MainActivity extends AppCompatActivity
         minMax_TextView = findViewById(R.id.textView_minMax);
 
         // initialize a listener
-        mListener = new MyListener(database, temperature_TextView, city_TextView, description_TextView, windSpeed_TextView, humidity_TextView, minMax_TextView);
+        mListener = new OnCompletedNetworkingListener()
+        {
+            @Override
+            public void handleEndOfNetworking()
+            {
+                updateUI();
+            }
+        };
 
         // button clicks
         button_update.setOnClickListener(new View.OnClickListener()
@@ -105,7 +105,10 @@ public class MainActivity extends AppCompatActivity
                 {
                     JSONObject jObj = NetFun.requestInfoFromNetwork(stringURL);
                     WeatherObservation wObs = NetFun.makeJsonToObservation(jObj);
-                    database.add(wObs);
+                    if (wObs != null)
+                    {
+                        database.add(wObs);
+                    }
                     mListener.handleEndOfNetworking();
                 }
             });
@@ -125,12 +128,12 @@ public class MainActivity extends AppCompatActivity
         {
             WeatherObservation currentWO = database.get(database.size()-1);
 
-            city_TextView.setText(city);
+            city_TextView.setText(currentWO.getCity_name() + " (" + currentWO.getCountry() + ")");
             temperature_TextView.setText(String.format(Locale.UK, "%.0f°C", currentWO.getTemp()));
             description_TextView.setText(currentWO.getDescription());
             windSpeed_TextView.setText(String.valueOf(currentWO.getWind_speed()));
             humidity_TextView.setText(String.format(Locale.UK, "%.0f%%", currentWO.getHumidity()));
-            minMax_TextView.setText(String.format(Locale.UK, "%.0f - %.0f°C", currentWO.getTemp_min(), currentWO.getTemp_max()));
+            minMax_TextView.setText(String.format(Locale.UK, "%.0f  |  %.0f°C", currentWO.getTemp_min(), currentWO.getTemp_max()));
         }
     }
 }
