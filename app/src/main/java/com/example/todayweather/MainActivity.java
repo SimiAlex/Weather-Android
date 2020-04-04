@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity
                     if (wObs != null)
                     {
                         database.add(wObs);
+                        mListener.handleEndOfNetworking();
                     }
-                    mListener.handleEndOfNetworking();
                 }
             });
         }
