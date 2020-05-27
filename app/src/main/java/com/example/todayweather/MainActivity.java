@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity
 {
     // data fields
-    private static final String API_KEY = "29fe7b237d05764a1bd1308c911e8f74";
+    private static final String API_KEY = "API_KEY"; // place here your individual API key
     private static List<WeatherObservation> database = new CopyOnWriteArrayList<>();
     private String stringURL;
 
