@@ -16,18 +16,14 @@ public final class NetFun
     {
         JSONObject jObj = null;
         HttpURLConnection huc = null;
-        Log.d("Today Weather", "You are in requestInfoFromNetwork() - before the initial try block");
 
         try
         {
             huc = (HttpURLConnection) (new URL(stringURL)).openConnection();
-            Log.d("Today Weather", "requestInfoFromNetwork() - line 24");
             huc.setRequestMethod("GET");
             huc.setReadTimeout(10_000);
             huc.setConnectTimeout(10_000);
-            Log.d("Today Weather", "requestInfoFromNetwork() - line 28");
             huc.connect();
-            Log.d("Today Weather", "requestInfoFromNetwork() - line 30, responseCode = " + huc.getResponseCode());
 
             if (huc.getResponseCode() == 200)
             {
@@ -42,7 +38,6 @@ public final class NetFun
                     }
 
                     jObj = new JSONObject(sb.toString());
-                    Log.d("Today Weather", "jObj created successfully in requestInfoFromNetwork()");
                 }
             }
             else

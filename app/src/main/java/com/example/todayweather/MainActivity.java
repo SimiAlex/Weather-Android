@@ -22,8 +22,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity
 {
     // data fields
-    private static final String API_KEY = "API_KEY"; // place here your individual API key
-    private static List<WeatherObservation> database = new CopyOnWriteArrayList<>();
+    private static final String API_KEY = ""; // place here your individual API key
     private String stringURL;
 
     // UI fields
@@ -46,14 +45,7 @@ public class MainActivity extends AppCompatActivity
         initializeLayoutElements();
 
         // button clicks
-        button_update.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                getDataInNewThread();
-            }
-        });
+        button_update.setOnClickListener(v -> getDataInNewThread());
     }
 
     public void getDataInNewThread()
@@ -76,27 +68,23 @@ public class MainActivity extends AppCompatActivity
         {
             JSONObject jObj = NetFun.requestInfoFromNetwork(stringURL);
             WeatherObservation wObs = NetFun.makeJsonToObservation(jObj);
-            if (wObs != null)
-            {
-                database.add(wObs);
-                // update UI on the main thread
-                runOnUiThread(() -> updateUI());
-            }
+
+            // update UI on the main thread
+            runOnUiThread(() -> updateUI(wObs));
+
         }).start();
     }
 
-    private void updateUI()
+    private void updateUI(WeatherObservation weatherObservation)
     {
-        if (database.size() > 0)
+        if (weatherObservation != null)
         {
-            WeatherObservation currentWO = database.get(database.size()-1);
-
-            city_TextView.setText(String.format("%s (%s)", currentWO.getCity_name(), currentWO.getCountry()));
-            temperature_TextView.setText(String.format(Locale.UK, "%.0f°C", currentWO.getTemp()));
-            description_TextView.setText(currentWO.getDescription());
-            windSpeed_TextView.setText(String.valueOf(currentWO.getWind_speed()));
-            humidity_TextView.setText(String.format(Locale.UK, "%.0f%%", currentWO.getHumidity()));
-            minMax_TextView.setText(String.format(Locale.UK, "%.0f  |  %.0f°C", currentWO.getTemp_min(), currentWO.getTemp_max()));
+            city_TextView.setText(String.format("%s (%s)", weatherObservation.getCity_name(), weatherObservation.getCountry()));
+            temperature_TextView.setText(String.format(Locale.UK, "%.0f°C", weatherObservation.getTemp()));
+            description_TextView.setText(weatherObservation.getDescription());
+            windSpeed_TextView.setText(String.valueOf(weatherObservation.getWind_speed()));
+            humidity_TextView.setText(String.format(Locale.UK, "%.0f%%", weatherObservation.getHumidity()));
+            minMax_TextView.setText(String.format(Locale.UK, "%.0f  |  %.0f°C", weatherObservation.getTemp_min(), weatherObservation.getTemp_max()));
         }
     }
 
