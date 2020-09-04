@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity
 {
     // data fields
-    private static final String API_KEY = ""; // place here your individual API key
+    private static final String API_KEY = "29fe7b237d05764a1bd1308c911e8f74"; // place here your individual API key
     private String stringURL;
 
     // UI fields
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_v2);
 
         // initialize layout
         initializeLayoutElements();
