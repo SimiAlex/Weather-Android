@@ -1,8 +1,18 @@
 package com.example.todayweather;
 
+import android.util.Log;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+
 public final class WeatherObservation
 {
     // fields
+    public static final String TAG = "Weather";
+
+    private LocalDateTime dateTime;
     private double temp;
     private double pressure;
     private double humidity;
@@ -14,8 +24,13 @@ public final class WeatherObservation
     private String city_name;
 
     // constructor
-    public WeatherObservation(double temp, double pressure, double humidity, double temp_min, double temp_max, double wind_speed, String description, String country, String city)
+    public WeatherObservation(long dateTime, double temp, double pressure, double humidity, double temp_min,
+                              double temp_max, double wind_speed, String description, String country, String city)
     {
+        // convert unix time to LocalDateTime
+        this.dateTime = Instant.ofEpochSecond(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        // other fields
         this.temp = temp - 273.15;
         this.pressure = pressure;
         this.humidity = humidity;
@@ -28,6 +43,11 @@ public final class WeatherObservation
     }
 
     // methods
+    public LocalDateTime getDateTime()
+    {
+        return dateTime;
+    }
+
     public double getTemp()
     {
         return temp;

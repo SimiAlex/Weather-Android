@@ -12,6 +12,10 @@ import java.net.URL;
 
 public final class NetFun
 {
+    // fields
+    public static final String TAG = "Weather";
+
+    // methods
     public static JSONObject requestInfoFromNetwork(String stringURL)
     {
         JSONObject jObj = null;
@@ -69,6 +73,7 @@ public final class NetFun
         }
 
         double temp, pressure, humidity, temp_min, temp_max, wind_speed;
+        long dateTime, timezoneOffset;
         String description, country, city_name;
         WeatherObservation obs = null;
 
@@ -83,8 +88,9 @@ public final class NetFun
             description = jObj.getJSONArray("weather").getJSONObject(0).getString("description");
             country = jObj.getJSONObject("sys").getString("country");
             city_name = jObj.getString("name");
+            dateTime = jObj.getLong("dt");
 
-            obs = new WeatherObservation(temp, pressure, humidity, temp_min, temp_max, wind_speed, description, country, city_name);
+            obs = new WeatherObservation(dateTime,temp, pressure, humidity, temp_min, temp_max, wind_speed, description, country, city_name);
         }
         catch (JSONException e)
         {

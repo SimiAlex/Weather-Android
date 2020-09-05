@@ -7,16 +7,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
-<!--    <ImageView-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/city_LinearLayout"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        android:src="@drawable/background_01"-->
-<!--        android:scaleType="centerCrop"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_width="0dp"/>-->
-
     <LinearLayout
         android:id="@+id/city_LinearLayout"
         android:layout_width="match_parent"
@@ -62,7 +52,7 @@
         android:columnCount="1"
         android:rowCount="4"
         android:alignmentMode="alignMargins"
-        android:rowOrderPreserved="true"
+        android:rowOrderPreserved="false"
         android:padding="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +62,9 @@
         <!-- Row 1: date, time & city -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_marginBottom="20dp"
             app:cardCornerRadius="15dp"
             android:background="#00838F"
             app:cardElevation="8dp">
@@ -80,7 +72,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:background="@color/cardsBackgroundColor">
 
                 <TextView
                     android:id="@+id/city_TextView"
@@ -92,12 +85,19 @@
                     android:textColor="@android:color/black"
                     android:gravity="center"/>
 
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@android:color/black" />
+
                 <TextView
                     android:id="@+id/dateTime_TextView"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     tools:text="30 APR 2020\n14:35"
                     android:textColor="@android:color/black"
                     android:gravity="center"/>
@@ -109,16 +109,22 @@
         <!-- Row 2: current weather -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="2"
             app:cardCornerRadius="15dp"
-            android:background="#7198C5"
+            android:layout_marginBottom="20dp"
             app:cardElevation="8dp" >
 
             <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/cardsBackgroundColor">
 
-                <TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
                     <TextView
                         android:id="@+id/textView_temperature"
@@ -126,15 +132,48 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        tools:text="17°C"
+                        android:textColor="#e74c3c"
                         android:textSize="60sp"
-                        android:textColor="#e74c3c" />
+                        tools:text="17°C" />
+
+                    <View
+                        android:layout_width="3dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@android:color/black" />
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:src="@drawable/weather_status_control"/>
+                        android:src="@drawable/weather_status_control" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="6dp">
+
+                    <TextView
+                        android:id="@+id/textView_minMax"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
+                        tools:text="5  |  10°C" />
+
+                    <TextView
+                        android:id="@+id/textView_description"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
+                        tools:text="partly cloudy" />
 
                 </TableRow>
 
@@ -145,8 +184,139 @@
         </androidx.cardview.widget.CardView>
 
         <!-- Row 3: other weather info (wind speed, humidity) -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="15dp"
+            android:background="#7198C5"
+            app:cardElevation="8dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@color/cardsBackgroundColor"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:padding="16dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/wind_sock_icon"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:id="@+id/textView_windSpeed"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    tools:text="20\nm/s"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"/>
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@android:color/black" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/humidity_icon"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:id="@+id/textView_humidity"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    tools:text="85%"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
         <!-- Row 4: other weather info (sunrise, sunset) -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="15dp"
+            android:background="#7198C5"
+            app:cardElevation="8dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@color/cardsBackgroundColor"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:padding="16dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/sunrise_icon"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:id="@+id/textView_sunrise"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    tools:text="7:00"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"/>
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@android:color/black" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:src="@drawable/sunset_icon"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="center"/>
+
+                <TextView
+                    android:id="@+id/textView_sunset"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    tools:text="22:35"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/black"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
     </GridLayout>
 

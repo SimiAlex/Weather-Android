@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     private TextView windSpeed_TextView;
     private TextView humidity_TextView;
     private TextView minMax_TextView;
+    private TextView dateTime_TextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -85,6 +86,9 @@ public class MainActivity extends AppCompatActivity
             windSpeed_TextView.setText(String.valueOf(weatherObservation.getWind_speed()));
             humidity_TextView.setText(String.format(Locale.UK, "%.0f%%", weatherObservation.getHumidity()));
             minMax_TextView.setText(String.format(Locale.UK, "%.0f  |  %.0f°C", weatherObservation.getTemp_min(), weatherObservation.getTemp_max()));
+
+            String dateTimeFormatted = String.format("%s\n%s", weatherObservation.getDateTime().toLocalDate().toString(), weatherObservation.getDateTime().toLocalTime().toString());
+            dateTime_TextView.setText(dateTimeFormatted);
         }
     }
 
@@ -98,5 +102,6 @@ public class MainActivity extends AppCompatActivity
         windSpeed_TextView = findViewById(R.id.textView_windSpeed);
         humidity_TextView = findViewById(R.id.textView_humidity);
         minMax_TextView = findViewById(R.id.textView_minMax);
+        dateTime_TextView = findViewById(R.id.dateTime_TextView);
     }
 }
