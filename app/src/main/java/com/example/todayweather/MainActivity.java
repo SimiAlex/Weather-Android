@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity
     private TextView humidity_TextView;
     private TextView minMax_TextView;
     private TextView dateTime_TextView;
+    private TextView sunrise_TextView;
+    private TextView sunset_TextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -89,6 +91,10 @@ public class MainActivity extends AppCompatActivity
 
             String dateTimeFormatted = String.format("%s\n%s", weatherObservation.getDateTime().toLocalDate().toString(), weatherObservation.getDateTime().toLocalTime().toString());
             dateTime_TextView.setText(dateTimeFormatted);
+
+            // sunrise & sunset
+            sunrise_TextView.setText(weatherObservation.getSunrise().toLocalTime().toString());
+            sunset_TextView.setText(weatherObservation.getSunset().toLocalTime().toString());
         }
     }
 
@@ -103,5 +109,7 @@ public class MainActivity extends AppCompatActivity
         humidity_TextView = findViewById(R.id.textView_humidity);
         minMax_TextView = findViewById(R.id.textView_minMax);
         dateTime_TextView = findViewById(R.id.dateTime_TextView);
+        sunrise_TextView = findViewById(R.id.textView_sunrise);
+        sunset_TextView = findViewById(R.id.textView_sunset);
     }
 }

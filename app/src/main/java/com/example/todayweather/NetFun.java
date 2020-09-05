@@ -73,7 +73,7 @@ public final class NetFun
         }
 
         double temp, pressure, humidity, temp_min, temp_max, wind_speed;
-        long dateTime, timezoneOffset;
+        long dateTime, sunriseLong, sunsetLong;
         String description, country, city_name;
         WeatherObservation obs = null;
 
@@ -89,8 +89,10 @@ public final class NetFun
             country = jObj.getJSONObject("sys").getString("country");
             city_name = jObj.getString("name");
             dateTime = jObj.getLong("dt");
+            sunriseLong = jObj.getJSONObject("sys").getLong("sunrise");
+            sunsetLong = jObj.getJSONObject("sys").getLong("sunset");
 
-            obs = new WeatherObservation(dateTime,temp, pressure, humidity, temp_min, temp_max, wind_speed, description, country, city_name);
+            obs = new WeatherObservation(dateTime,temp, pressure, humidity, temp_min, temp_max, wind_speed, description, country, city_name, sunriseLong, sunsetLong);
         }
         catch (JSONException e)
         {

@@ -22,13 +22,18 @@ public final class WeatherObservation
     private String description;
     private String country;
     private String city_name;
+    private LocalDateTime sunrise;
+    private LocalDateTime sunset;
 
     // constructor
     public WeatherObservation(long dateTime, double temp, double pressure, double humidity, double temp_min,
-                              double temp_max, double wind_speed, String description, String country, String city)
+                              double temp_max, double wind_speed, String description, String country, String city,
+                              long sunriseLong, long sunsetLong)
     {
         // convert unix time to LocalDateTime
         this.dateTime = Instant.ofEpochSecond(dateTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        this.sunrise = Instant.ofEpochSecond(sunriseLong).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        this.sunset = Instant.ofEpochSecond(sunsetLong).atZone(ZoneId.systemDefault()).toLocalDateTime();
 
         // other fields
         this.temp = temp - 273.15;
@@ -91,5 +96,15 @@ public final class WeatherObservation
     public String getCity_name()
     {
         return city_name;
+    }
+
+    public LocalDateTime getSunrise()
+    {
+        return sunrise;
+    }
+
+    public LocalDateTime getSunset()
+    {
+        return sunset;
     }
 }
